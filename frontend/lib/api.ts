@@ -1,5 +1,9 @@
-// Same-origin by default: Next.js forwards /api/* to the backend (see next.config.ts).
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const configuredApiUrl =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "https://secondcharge-api.onrender.com";
+export const API_URL = configuredApiUrl.includes("://")
+  ? configuredApiUrl.replace(/\/$/, "")
+  : `https://${configuredApiUrl.replace(/\/$/, "")}`;
 
 export type Factor = { feature: string; label: string; value: string; impact: number };
 
