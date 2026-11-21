@@ -1,9 +1,14 @@
-const configuredApiUrl =
+function normalizeApiUrl(value: string): string {
+  const trimmed = value.trim().replace(/\/$/, "");
+  if (trimmed.includes("://")) return trimmed;
+  if (trimmed.includes(".")) return `https://${trimmed}`;
+  return `https://${trimmed}.onrender.com`;
+}
+
+export const API_URL = normalizeApiUrl(
   process.env.NEXT_PUBLIC_API_URL ??
-  "https://secondcharge-api.onrender.com";
-export const API_URL = configuredApiUrl.includes("://")
-  ? configuredApiUrl.replace(/\/$/, "")
-  : `https://${configuredApiUrl.replace(/\/$/, "")}`;
+  "secondcharge-api.onrender.com",
+);
 
 export type Factor = { feature: string; label: string; value: string; impact: number };
 
