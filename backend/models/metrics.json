@@ -1,0 +1,11 @@
+{
+  "training_vehicles": 7680,
+  "test_vehicles": 2400,
+  "soh_mae_points": 0.99,
+  "soh_mae_with_diagnostics": 0.88,
+  "soh_mae_history_only": 1.35,
+  "band_80pct_coverage": 0.818,
+  "avg_band_width_points": 3.27,
+  "anomaly_recall": 1.0,
+  "anomaly_precision": 0.7
+}

@@ -1,0 +1,71 @@
+{
+  "name": "SecondCharge – appraisal completed",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "secondcharge-appraisal",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Appraisal completed",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "secondcharge-appraisal"
+    },
+    {
+      "parameters": {
+        "fromEmail": "certificates@secondcharge.example",
+        "toEmail": "={{ $json.body.seller_contact }}",
+        "subject": "=Your battery health certificate – {{ $json.body.vehicle }} (Grade {{ $json.body.grade }})",
+        "text": "=Hello,\n\nYour {{ $json.body.vehicle }} battery was appraised at {{ $json.body.soh }}% state of health (Grade {{ $json.body.grade }}).\n\n{{ $json.body.summary }}\n\nView and verify your certificate: {{ $json.body.certificate_url }}\n\nSecondCharge",
+        "options": {}
+      },
+      "name": "Email seller the certificate",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [520, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json.body.route.notify_partners }}", "value2": true }
+          ]
+        }
+      },
+      "name": "Second life or recycling?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [520, 420]
+    },
+    {
+      "parameters": {
+        "fromEmail": "routing@secondcharge.example",
+        "toEmail": "partners@secondcharge.example",
+        "subject": "=Battery available: {{ $json.body.route.title }} – {{ $json.body.vehicle }}",
+        "text": "=A battery is ready for its next life.\n\nVehicle: {{ $json.body.vehicle }} (VIN {{ $json.body.vin }})\nState of health: {{ $json.body.soh }}% (Grade {{ $json.body.grade }})\nRecommended route: {{ $json.body.route.title }}\nCO2e avoided if reused: {{ $json.body.co2_avoided_kg }} kg\n\nBattery passport: {{ $json.body.certificate_url }}",
+        "options": {}
+      },
+      "name": "Alert second-life and recycling partners",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [780, 400]
+    }
+  ],
+  "connections": {
+    "Appraisal completed": {
+      "main": [[
+        { "node": "Email seller the certificate", "type": "main", "index": 0 },
+        { "node": "Second life or recycling?", "type": "main", "index": 0 }
+      ]]
+    },
+    "Second life or recycling?": {
+      "main": [[
+        { "node": "Alert second-life and recycling partners", "type": "main", "index": 0 }
+      ], []]
+    }
+  },
+  "settings": {}
+}
