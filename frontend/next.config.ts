@@ -8,10 +8,6 @@ const backend = configuredBackend.includes("://") ? configuredBackend : `https:/
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
-  // Forward API calls to FastAPI so the whole app is served from one address.
-  async rewrites() {
-    return [{ source: "/api/:path*", destination: `${backend}/api/:path*` }];
-  },
 };
 
 export default nextConfig;
