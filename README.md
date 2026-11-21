@@ -36,6 +36,12 @@ cd ../frontend
 npm install && npm run build && npx next start -p 3000
 ```
 
+On Windows, from the project root, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start.ps1
+```
+
 Tests: `cd backend && .venv/bin/python -m pytest`
 
 ## Configuration

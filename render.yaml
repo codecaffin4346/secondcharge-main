@@ -9,10 +9,27 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: PUBLIC_WEB_URL
-        sync: false # your Vercel URL, e.g. https://secondcharge.vercel.app
+        fromService:
+          type: web
+          name: secondcharge-web
+          property: host
       - key: ANTHROPIC_API_KEY
         sync: false # optional: turns on Claude invoice reading and summaries
       - key: N8N_WEBHOOK_URL
         sync: false # optional
       - key: SEED_DEMO
         value: "1"
+  - type: web
+    name: secondcharge-web
+    runtime: node
+    rootDir: frontend
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start -- -H 0.0.0.0
+    healthCheckPath: /
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: secondcharge-api
+          property: host

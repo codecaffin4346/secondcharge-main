@@ -26,7 +26,10 @@ GRADE_COLORS = {"A": "#0D7A6B", "B": "#2C5D9E", "C": "#E39B2E", "D": "#C0443A"}
 
 
 def verify_url(appraisal_id: str) -> str:
-    return f"{settings.public_web_url.rstrip('/')}/verify/{appraisal_id}"
+    base = settings.public_web_url.rstrip("/")
+    if base and "://" not in base:
+        base = f"https://{base}"
+    return f"{base}/verify/{appraisal_id}"
 
 
 def render_pdf(r: dict) -> bytes:
